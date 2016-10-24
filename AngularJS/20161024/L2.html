@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AngularJS指令</title>
+        <meta charset="utf-8">
+        <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body>
+        <div ng-app="sigoAppL3" ng-init="quantity=10;price=5;names=['jak','marry','lucy','bob'];
+                                persons=[{name:'jak',age:20},{name:'marry',age:22},{name:'lucy',age:21},{name:'bob',age:20}]">
+            <h2>价格计算器</h2>
+            数量：<input type="number" ng-model="quantity" />
+            价格：<input type="number" ng-model="price" />
+            <p><b>总价:</b>{{quantity * price}}</p>
+
+            <p>通过ng-repeat来遍历数组names=['jak','marry','lucy','bob']</p>
+            <ul type="circle">
+                <li ng-repeat="x in names">
+                    {{x}}
+                </li>
+            </ul>
+
+            <p>通过ng-repeat来遍历对象数组persons=[{name:'jak'; age:20},{name:'marry'; age:22},{name:'lucy'; age:21},{name:'bob'; age:20}]</p>
+            <ul type="square">
+                <li ng-repeat="x in persons">
+                    name:{{x.name}}, age:{{x.age}}
+                </li>
+            </ul>
+
+             <p>创建自定义指令</p>
+            通过元素名调用指令： <sigo-directive></sigo-directive><br/>
+            通过属性名调用指令：<div sigo-directive />
+            通过类名调用指令：<div class="sigo-directive" />
+            <!--注释 sigo-directive -->
+        </div>
+        <script>
+            var app = angular.module("sigoAppL3", []);
+            app.directive("sigoDirective", function(){
+                return {
+                    template : "<h6>自定义指令模板abc</h6>"
+                };
+            });
+        </script>
+    </body>
+</html>

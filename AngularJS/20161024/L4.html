@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS模型</title>
+    <meta charset="utf-8">
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <style>
+        input.ng-invalid{
+            border: 1px solid red;
+        }
+        input.ng-empty{
+            border: 1px solid blue;;
+        }
+        input.ng-valid{
+            border: 1px solid green;
+        }
+        /*
+        ng-model 指令根据表单域的状态添加/移除以下类：
+    ng-empty
+    ng-not-empty
+    ng-touched
+    ng-untouched
+    ng-valid
+    ng-invalid
+    ng-dirty
+    ng-pending
+    ng-pristine
+
+        */
+    </style>
+</head>
+<body>
+    <h2>验证用户输入</h2>
+    <form ng-app="testApp" name="myForm" ng-controller="myCtrl">
+        Email:
+        <input type="email" name="myEmail" ng-model="text" required />
+        <span ng-show="myForm.myEmail.$error.email">这是一个不合法的Email！</span>
+        <h4>状态</h4>
+        <h5>valid: {{myForm.myEmail.$valid}}</h5>
+        <h5>dirty: {{myForm.myEmail.$dirty}}</h5>
+        <h5>touched: {{myForm.myEmail.$touched}}</h5>
+    </form>
+    <script>
+        var app = angular.module("testApp", []);
+        app.controller("myCtrl", function($scope){
+            $scope.text = null;
+        });
+        </script>
+</body>
+</html>

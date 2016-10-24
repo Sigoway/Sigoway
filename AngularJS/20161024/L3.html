@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>通过Class调用AngularJS指令</title>
+        <meta charset="utf-8">
+        <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    </head>
+    <body ng-app="sigoAppL3">
+            <p>创建自定义指令</p>
+            通过元素名调用指令： <sigo-directive></sigo-directive><br/>
+            通过属性名调用指令：<div sigo-directive />
+            通过类名调用指令（必须为指定添加restrict="C" 才有效）：<div class="sigo-directive" />
+            <!-- directive: sigo-directive --><!-- directive: 为固定标识，如果缺失，将不会显示自定义指令内容 -->
+
+        <script>
+            var app = angular.module("sigoAppL3", []);
+            app.directive("sigoDirective", function(){
+                return {
+                    //template : "<h3>通过元素名或属性名调用自定义指令模板</h3>
+                    
+                    //restrict : "C",
+                    //template : "<h4>通过Class调用自定义指令模板</h4>"
+                    
+                    restrict : "M",
+                    replace : true,
+                    template : "<h5>通过注释调用自定义指令模板</h5>"
+                };
+            });
+
+            /*通过添加 restrict 属性,并设置值为 "A", 来设置指令只能通过属性的方式来调用
+            restrict 值可以是以下几种:
+                E 作为元素名使用
+                A 作为属性使用
+                C 作为类名使用
+                M 作为注释使用
+            restrict 默认值为 EA, 即可以通过元素名和属性名来调用指令。*/
+        </script>
+    </body>
+</html>
