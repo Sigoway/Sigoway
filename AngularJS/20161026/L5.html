@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS控制器和Scope作用域</title>
+    <meta charset="utf-8">
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <style>
+        input.ng-invalid{
+            border: 1px solid red;
+        }
+        input.ng-empty{
+            border: 1px solid blue;;
+        }
+        input.ng-valid{
+            border: 1px solid green;
+        }
+        /*
+        ng-model 指令根据表单域的状态添加/移除以下类：
+    ng-empty
+    ng-not-empty
+    ng-touched
+    ng-untouched
+    ng-valid
+    ng-invalid
+    ng-dirty
+    ng-pending
+    ng-pristine
+
+        */
+    </style>
+</head>
+<body ng-app="testApp">
+    <h3>$rootScope和控制器方法</h3>
+    <div>
+        {{displayEmailInfo()}}
+    </div>
+    <h2>验证用户输入</h2>
+    <form name="myForm" ng-controller="inputCtrl">
+        Email:
+        <input type="email" name="myEmail" ng-model="text" required />
+        <span ng-show="myForm.myEmail.$error.email">这是一个不合法的Email！</span>
+        <span ng-show="!myForm.myEmail.$error.email">{{text}}</span>
+        <h4>状态</h4>
+        <h5>valid: {{myForm.myEmail.$valid}}</h5>
+        <h5>dirty: {{myForm.myEmail.$dirty}}</h5>
+        <h5>touched: {{myForm.myEmail.$touched}}</h5>
+    </form>
+    <ul>
+        <li ng-if="persons == null">没有人员信息<li>
+        <li ng-repeat="person in persons">
+            {{"姓名：" + person.name + "     年龄：" + person.age}}
+            <!--{{person.name + ',' + person.age}}-->
+        </li>
+    </ul>
+    <script src="L5_Controller.js"></script>
+</body>
+</html>
