@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS 过滤器</title>
+    <meta charset="utf-8">
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <style>
+        .personList{
+            border-collapse: collapse;
+        }
+        .personList th, td{
+            border: 1px solid black;
+        }
+        .personList th{
+            background-color: lightblue;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body ng-app="filterApp">
+    <div ng-controller="filterCtrl">
+        <h3>大写字母过滤器(uppercase)</h3>
+        <p>{{firstPerson.firstName | uppercase}}</p>
+        
+        <h3>小写字母过滤器(lowercase)</h3>
+        <p>{{firstPerson.lastName | lowercase}}</p>
+
+        <h3>货币过滤器(currency)</h3>
+        <p>年薪：{{(firstPerson.solary * firstPerson.months) | currency}}</p>
+
+        
+        <h3>排序过滤器(orderBy)</h3>
+        <ul>
+            <li ng-repeat="p in persons | orderBy:'age'">
+                {{p.age + ' ' + p.firstName + (p.lastName | uppercase)}}
+            </li>
+        </ul>
+
+        <h3>子集过滤器(filter)</h3>
+        <input type="text" ng-model="keyward" placeholder="输入信息过滤" list="personList" autocomplete="username" />
+        <datalist id="personList">
+            <option ng-repeat="p in persons" label="{{p.firstName + p.lastName}}" value="{{p.firstName}}"></option>
+        </datalist>
+        <table class="personList">
+            <caption>雇员信息表</caption>
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>年薪</th>
+            </tr>
+            <tr ng-repeat="p in persons | filter:keyward">
+                <td>{{p.firstName + p.lastName}}</td>
+                <td>{{p.age}}</td>
+                <td>{{p.solary * p.months | currency}}</td>
+            </tr>
+        </table>
+    </div>
+    <script src="filterCtrl.js"></script>
+</body>
+</html>

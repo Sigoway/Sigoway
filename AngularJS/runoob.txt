@@ -1,2 +1,6 @@
 2016/10/24:
-AngularJS‹³’ö-–ÍŒ^ œ
+AngularJS Model
+2016/10/26:
+AngularJS Scope, controller
+2016/10/27:
+AngularJS filter, service
