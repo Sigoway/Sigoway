@@ -19,20 +19,26 @@
 </head>
 <body>
     <p>URL:{{localUrl}}</p>
+    <h3>$http.get(...).then(response):response.data.xxx</h3>
+    <p>{{thenData}}</p>
+    <h3>$http.get(...).success(response):response.xxx</h3>
+    <p>{{successData}}</p>
+
     <p style="width: 300px;background-color:{{delayInfoColor}}">{{delayInfo}}</p>
+
     <div>
         <div>{{thetime}}</div>
         <h3>排序过滤器(orderBy)和自定义过滤器(追加*)</h3>
         <ul>
-            <li ng-repeat="p in persons | orderBy:'age'">
+            <li ng-repeat="p in persons1 | orderBy:'age'">
                 {{p.age + ' ' + p.firstName + (p.lastName | sigoFilter)}}
             </li>
         </ul>
-<!--
+
         <h3>子集过滤器(filter)</h3>
         <input type="text" ng-model="keyward" placeholder="输入信息过滤" list="personList" autocomplete="username" />
         <datalist id="personList">
-            <option ng-repeat="p in persons" label="{{p.firstName + p.lastName}}" value="{{p.firstName}}"></option>
+            <option ng-repeat="p in persons2" label="{{p.firstName + p.lastName}}" value="{{p.firstName}}"></option>
         </datalist>
         <table class="personList">
             <caption>雇员信息表</caption>
@@ -41,12 +47,12 @@
                 <th>年龄</th>
                 <th>年薪</th>
             </tr>
-            <tr ng-repeat="p in persons | filter:keyward">
+            <tr ng-repeat="p in persons2 | filter:keyward">
                 <td>{{p.firstName + p.lastName}}</td>
                 <td>{{p.age}}</td>
                 <td>{{p.solary * p.months | currency}}</td>
             </tr>
-        </table>-->
+        </table>
     </div>
     <script src="L7_ServiceCtrl.js"></script>
 </body>
