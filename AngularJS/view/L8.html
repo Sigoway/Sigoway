@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AngularJS 选择器</title>
+        <meta charset="utf-8">
+        <script src="../js/angular_1.5.8/angular.min.js"></script>
+    </head>
+    <body ng-app="selectApp" ng-controller="selectCtrl">
+        <h3>1.使用ng-option创建下拉框(选择项可以是对象)</h3>
+        <div>
+            <span title="数据源：字符串数组">Names:</span>
+            <select ng-model="selectedName" ng-options="x for x in names"></select>
+            {{selectedName}}
+            <br/>
+            <span title="数据源：Json数组">Sites:</span>
+            <select ng-model="selectedSite" ng-options="x.site for x in sites"></select>
+            您选择的站点信息是：{{selectedSite.site + ":" + selectedSite.url}}
+            <br/>
+            <span title="数据源：对象(Json)">Sites:</span>
+            <select ng-model="selectedSiteObj" ng-options="x for (x,y) in sitesObj"></select>
+            您选择的信息是：<a href="{{selectedSiteObj}}">{{selectedSiteObj}}</a>
+            <br/>
+            <span title="数据源：对象(Json,value为Json对象)">Cars:</span>
+            <select ng-model="selectedCar" ng-options="y.name for (x,y) in cars"></select>
+            您选择的汽车信息是:<span ng-show="selectedCar != null">{{" color:" + selectedCar.color + ", salePrice:" + selectedCar.salePrice}}</span>
+        </div>
+
+        <h3>2.使用ng-repeat创建下拉框(选择项只能为单一值，不能是对象)</h3>
+        <div>
+            Names:<select>
+                <option ng-repeat="x in names">{{x}}</option>
+            </select>
+            Sites:
+            <select ng-model="selectedSite1">
+                <option ng-repeat="x in sites" value="{{x.url}}">{{x.site}}</option>
+            </select>
+            您选择的站点信息是：{{selectedSite1}}
+        </div>
+
+        <script src="../js/L8_Select.js"></script>
+    </body>
+</html> 
