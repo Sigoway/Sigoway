@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>  
+    <head>
+        <title>AngularJS 表格</title>
+        <meta charset="utf-8">
+        <script src="../js/angular_1.5.8/angular.min.js"></script>
+        <style>
+            .personList,
+            .personList tr,th,td{
+                border: 1px solid #000000;
+                border-collapse:collapse;
+                padding:5px;
+            }
+            .personList tr:nth-child(odd){
+                background-color:#f1f1f1;
+            }
+            .personList tr:nth-child(event){
+                background-color:#ffffff;
+            }
+        </style>
+    </head>
+    <body>
+        <div ng-app="tableApp" ng-controller="tableCtrl">
+            <table class="personList">
+            <caption>雇员信息表</caption>
+            <tr>
+                <th>No</th>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>年薪</th>
+            </tr>
+            <tr ng-repeat="p in persons | orderBy:'age'">
+                <td>{{$index + 1}}</td>
+                <td>{{p.firstName + (p.lastName | uppercase)}}</td>
+                <td ng-if="$odd" style="background-color:red">{{p.age}}</td>
+                <td ng-if="$even" style="background-color:yellow">{{p.age}}</td>
+                <td>{{p.solary * p.months | currency}}</td>
+            </tr>
+        </table>
+        </div>
+        <script src="../js/L9_Table.js"></script>
+    </body>
+</html>
