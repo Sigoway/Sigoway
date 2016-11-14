@@ -6,7 +6,7 @@ var stats = initStats();
 
 var scene, renderer, camera;
 
-function load16(){
+//function load16(){
     //创建一个场景
     scene = new THREE.Scene();
     //创建一个渲染器
@@ -17,7 +17,7 @@ function load16(){
     renderer.setClearColor('#000000', 1.0);
     renderer.setSize(window.innerWidth, window.innerHeight);
     //启用阴影映射
-    renderer.shadowMapEnabled = true;
+    renderer.shadowMap.enabled = true;
     //控制阴影类型
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -88,18 +88,32 @@ function load16(){
     camera.lookAt(scene.position);
 
     $('#WebGL-output').append(renderer.domElement);
-    renderScene();
-};
+    render();
+//};
+
+var step = 0;
 
 /**
  * 渲染场景
  */
-function renderScene(){
+function render(){
     stats.begin();
-    renderer.render(scene, camera);
-    stats.end();
     
-    requestAnimationFrame(renderScene);
+    //旋转立方体
+    cube.rotation.x += 0.02;
+    cube.rotation.y += 0.02;
+    cube.rotation.z += 0.02;
+
+    //球体跳动速度
+    step += 0.04;
+    //球体跳动
+    sphere.position.x = 20 + (10 * Math.cos(step));
+    sphere.position.y = 2 + (10 * Math.abs(Math.sin(step)));
+
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
+
+    stats.end(); 
 }
 
 /**
