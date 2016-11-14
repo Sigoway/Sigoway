@@ -106,6 +106,10 @@ spotLight.shadow.mapSize.height = 1024;
 //spotLight.shadow.camera.far = 200;
 scene.add(spotLight);
 
+//创建一个环境光源
+var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+scene.add(ambientLight);
+
 //设置相机位置
 camera.position.x = -30;
 camera.position.y = 40;

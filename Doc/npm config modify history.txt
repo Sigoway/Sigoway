@@ -1,0 +1,12 @@
+2016/11/12 LingPC
+npm config get strict-ssl > true
+npm config get registry > https://registry.npmjs.org/
+
+npm config set strict-ssl false
+npm config set registry "http://registry.npmjs.org/"
+
+npm install -g cnpm --registry=http://registry.npm.taobao.org
+
+
+install history:
+cnpm install http-server -g
