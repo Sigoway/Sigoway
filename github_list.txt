@@ -1,0 +1,2 @@
+https://github.com/mrdoob/stats.js.git
+http://github.com/josdirksen/learning-threejs.git
