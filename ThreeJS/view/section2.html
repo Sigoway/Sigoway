@@ -12,16 +12,50 @@
                 margin:0;
                 overflow:hidden;
             }
+            table span{
+                color:white;
+            }
+            table input[type='text']{
+                width: 20px;
+            }
         </style>
     </head>
     <body>
         <div id="WebGL-output"></div>
         <div id="Stats-output"></div>
-        <script src="../js/section2/section-2.1.js"></script>
+        <div style="left:0px; top:50px;position:absolute;">
+            <table>
+                <tr>
+                    <td>translate</td>
+                    <td>
+                        <input id="cbx" type="checkbox" value="x"/><span>X</span>
+                        <input id="cby" type="checkbox" value="y"/><span>Y</span>
+                        <input id="cbz" type="checkbox" value="z"/><span>Z</span>
+                    </td>
+                    <td>
+                        <button id="translateObject" onclick="translateObject('cube_2');">Translate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Scale</td>
+                    <td>
+                        <span>长</span><input id="txtX" type="text">
+                        <span> X 宽</span><input id="txtY" type="text">
+                        <span> X 高</span><input id="txtZ" type="text">
+                    </td>
+                    <td>
+                        <button id="scaleObject" onclick="scaleObject('cube_3');">Scale</button>
+                    </td>
+                </tr>
+            </table>
+            <button id="fogObject" onclick="resizeObject('cube_100');">Fog</button>
+        </div>
+        <!--<script src="../js/section2/section-2.1.js"></script>-->
+        <script src="../js/section2/section-2.2.js"></script>
         <script>
-
             //JQuery 匿名方法, html文档加载完后执行
             $(function(){
+                init();
             });
         </script>
     </body>

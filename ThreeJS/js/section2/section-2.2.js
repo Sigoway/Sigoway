@@ -55,6 +55,9 @@ plane.position.z = 0;
 plane.receiveShadow = true;
 scene.add(plane);
 
+var axes = new THREE.AxisHelper(50);
+scene.add(axes);
+
 //环境光
 var ambientLight = new THREE.AmbientLight(0x0c0c0c);
 scene.add(ambientLight);
@@ -69,19 +72,22 @@ camera.position.y = 40;
 camera.position.z = 30;
 camera.lookAt(scene.position);
 
-this.addCube = function(){
+this.addCubeByName = function(name){
     var cubeSize = Math.ceil(Math.random() * 3);
     var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
     var cubeMaterial = new THREE.MeshLambertMaterial({ color:Math.random() * 0xffffff });
     var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.castShadow = true;
-    cube.name = "cube_" + (++numberOfCubes);
+    cube.name = name;
     cube.position.x = -30 + Math.round(Math.random() * planeGeometry.parameters.width);
     cube.position.y = Math.round(Math.random() * 5);
     cube.position.z = -20 + Math.round(Math.random() * planeGeometry.parameters.height);
 
     scene.add(cube);
     this.numberOfObjects = scene.children.length;
+}
+this.addCube = function(){
+    this.addCubeByName("cube_" + (++numberOfCubes));
 }
 
 this.removeCube = function(){
@@ -98,6 +104,7 @@ this.outputObjects = function(){
     console.log(scene.children);
 }
 
+this.addCubeByName('cube_100');
 $('#WebGL-output').append(renderer.domElement);
 render();
 
@@ -110,31 +117,31 @@ var translateTimes = 0;
 function render(){
     stats.begin();
 
-    if(this.numberOfCubes <= 99){
+    if(this.numberOfCubes <= 4){
         addCube();
     }
 
-    //旋转
-    scene.traverse(function(e){
-        if(e instanceof THREE.Mesh && e != plane){
-            e.rotation.x += controls.rotationSpeed;
-            e.rotation.y += controls.rotationSpeed;
-            e.rotation.z += controls.rotationSpeed;
-        }
-    });
+    // scene.traverse(function(e){
+    //     if(e instanceof THREE.Mesh && e != plane){
+    //         e.rotation.x += controls.rotationSpeed;
+    //         e.rotation.y += controls.rotationSpeed;
+    //         e.rotation.z += controls.rotationSpeed;
+    //     }
+    // });
 
-    //显示/隐藏
-    var cubeName = 'cube_' + Math.floor(Math.random() * 100);
-    var cubeMesh = scene.getObjectByName(cubeName);
-    if(cubeMesh != null && cubeMesh instanceof THREE.Mesh) {      
-        if(this.hiddenCubes >= 90){
-            cubeMesh.visible = true;
-            this.hiddenCubes--;
-        } else {
-            cubeMesh.visible = false;
-            this.hiddenCubes++;
-        }
-    }
+    // var cubeName = 'cube_' + Math.floor(Math.random() * 100);
+    // var cubeMesh = scene.getObjectByName(cubeName);
+    // if(cubeMesh != null && cubeMesh instanceof THREE.Mesh) {      
+    //     if(this.hiddenCubes >= 90){
+    //         cubeMesh.visible = true;
+    //         this.hiddenCubes--;
+    //     } else {
+    //         cubeMesh.visible = false;
+    //         this.hiddenCubes++;
+    //     }
+    // }
+
+    
 
     //雾化方式
     //scene.fog = new THREE.Fog(0xffffff, controls.fogDensity, 100);
@@ -143,4 +150,71 @@ function render(){
     renderer.render(scene, camera);
 
     stats.end();
+}
+
+function translateObject(name){
+    var cubeMesh = scene.getObjectByName(name);
+    if(cubeMesh != null && cubeMesh instanceof THREE.Mesh){
+        if(isChecked('cbx') && isChecked('cby') && isChecked('cbz')){
+            cubeMesh.translate(1,axes);
+            return;
+        }
+        if(isChecked('cbx')){
+            cubeMesh.translateX(1);
+        }
+        if(isChecked('cby')){
+            cubeMesh.translateY(1);
+        }
+        if(isChecked('cbz')){
+            cubeMesh.translateZ(1);
+        }
+    }
+}
+
+function isChecked(id){
+    return $('#'+id).is(':checked');
+}
+
+function getValue(id){
+    return $('#'+id).val();
+}
+
+function setValue(id, value){
+    return $('#'+id).val(value);
+}
+
+function scaleObject(name){
+    var cubeMesh = scene.getObjectByName(name);
+    if(cubeMesh != null && cubeMesh instanceof THREE.Mesh){
+        var width = getValue('txtX');
+        var height = getValue('txtY');
+        var depth = getValue('txtZ');
+        var scaleX = width / cubeMesh.geometry.parameters.width;
+        var scaleY = height / cubeMesh.geometry.parameters.height;
+        var scaleZ = depth / cubeMesh.geometry.parameters.depth;
+        cubeMesh.geometry.scale(scaleX, scaleY, scaleZ);
+
+         cubeMesh.geometry.parameters.width = width;
+         cubeMesh.geometry.parameters.height = height;
+         cubeMesh.geometry.parameters.depth = depth;
+
+    }
+}
+
+function resizeObject(name){
+    var cubeMesh = scene.getObjectByName(name);
+    if(cubeMesh != null && cubeMesh instanceof THREE.Mesh){
+        //设置Size不起作用
+         cubeMesh.geometry.parameters.depth = getValue('txtZ');
+         cubeMesh.geometry.computeFaceNormals();
+    }
+}
+
+function init(){
+    var cubeMesh = scene.getObjectByName('cube_100');
+    if(cubeMesh != null && cubeMesh instanceof THREE.Mesh){
+         setValue('txtX', cubeMesh.geometry.parameters.width);
+         setValue('txtY', cubeMesh.geometry.parameters.height);
+         setValue('txtZ', cubeMesh.geometry.parameters.depth);
+    }
 }
