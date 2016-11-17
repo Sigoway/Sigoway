@@ -39,14 +39,19 @@ var scene = new THREE.Scene();
 //scene.overrideMaterial = new THREE.MeshLambertMaterial({color:0xff0000, wireframe: true});
 
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-var renderer = new THREE.WebGLRenderer();
+//参数antialias使线条平滑锯齿少
+var renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setClearColor('#000000', 1);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 var planeGeometry = new THREE.PlaneGeometry(60, 40);
-var planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+var planeMaterial = new THREE.MeshLambertMaterial({
+    color:0xffffff, 
+    opacity:0.5,
+    transparent:true
+});
 var plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.rotation.x -= 0.5 * Math.PI;
 plane.position.x = 20;
@@ -56,6 +61,7 @@ plane.receiveShadow = true;
 scene.add(plane);
 
 var axes = new THREE.AxisHelper(50);
+// axes.rotateZ(-0.25 * Math.PI)
 scene.add(axes);
 
 //环境光
@@ -104,7 +110,65 @@ this.outputObjects = function(){
     console.log(scene.children);
 }
 
+function addCustomMesh(){
+    //parameter is axes
+    var vertices = [
+        new THREE.Vector3(1,3,1),
+        new THREE.Vector3(1,3,-1),
+        new THREE.Vector3(1,-1,1),
+        new THREE.Vector3(1,-1,-1),
+        new THREE.Vector3(-1,3,-1),
+        new THREE.Vector3(-1,3,1),
+        new THREE.Vector3(-1,-1,1),
+        new THREE.Vector3(-1,-1,1)
+    ];
+
+    //parameter is index of the vertices array 
+    var faces = [
+        new THREE.Face3(0,2,1),
+        new THREE.Face3(2,3,1),
+        new THREE.Face3(4,6,5),
+        new THREE.Face3(6,7,5),
+        new THREE.Face3(4,5,1),
+        new THREE.Face3(5,0,1),
+        new THREE.Face3(7,6,2),
+        new THREE.Face3(6,3,2),
+        new THREE.Face3(5,7,0),
+        new THREE.Face3(7,2,0),
+        new THREE.Face3(1,3,4),
+        new THREE.Face3(3,6,4)
+    ];
+
+    var geometry = new THREE.Geometry();
+    geometry.vertices = vertices;
+    geometry.faces = faces;
+    geometry.computeVertexNormals();
+    geometry.mergeVertices();
+
+    var materials = [
+        new THREE.MeshLambertMaterial({
+            opacity:0.6,
+            color:0x44ff44,
+            transparent:true
+        }),
+        new THREE.MeshBasicMaterial({
+            color:0xffffff,
+            wireframe:true
+        })
+    ];
+    
+    //符合材质，本质上是创建了多个Mesh
+    var meshMulti = new THREE.SceneUtils.createMultiMaterialObject(geometry,materials);
+    meshMulti.children.forEach(function(e){e.castShadow=true;})
+    meshMulti.name='multiMesh';
+    return meshMulti;
+}
+
 this.addCubeByName('cube_100');
+
+var mesh = addCustomMesh();
+scene.add(mesh);
+
 $('#WebGL-output').append(renderer.domElement);
 render();
 
@@ -117,35 +181,6 @@ var translateTimes = 0;
 function render(){
     stats.begin();
 
-    if(this.numberOfCubes <= 4){
-        addCube();
-    }
-
-    // scene.traverse(function(e){
-    //     if(e instanceof THREE.Mesh && e != plane){
-    //         e.rotation.x += controls.rotationSpeed;
-    //         e.rotation.y += controls.rotationSpeed;
-    //         e.rotation.z += controls.rotationSpeed;
-    //     }
-    // });
-
-    // var cubeName = 'cube_' + Math.floor(Math.random() * 100);
-    // var cubeMesh = scene.getObjectByName(cubeName);
-    // if(cubeMesh != null && cubeMesh instanceof THREE.Mesh) {      
-    //     if(this.hiddenCubes >= 90){
-    //         cubeMesh.visible = true;
-    //         this.hiddenCubes--;
-    //     } else {
-    //         cubeMesh.visible = false;
-    //         this.hiddenCubes++;
-    //     }
-    // }
-
-    
-
-    //雾化方式
-    //scene.fog = new THREE.Fog(0xffffff, controls.fogDensity, 100);
-
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 
@@ -154,7 +189,7 @@ function render(){
 
 function translateObject(name){
     var cubeMesh = scene.getObjectByName(name);
-    if(cubeMesh != null && cubeMesh instanceof THREE.Mesh){
+    if(cubeMesh != null){
         if(isChecked('cbx') && isChecked('cby') && isChecked('cbz')){
             cubeMesh.translate(1,axes);
             return;
@@ -172,7 +207,10 @@ function translateObject(name){
 }
 
 function isChecked(id){
+    //方式1
     return $('#'+id).is(':checked');
+    //方式2
+    //return $("#hideWire").prop("checked");
 }
 
 function getValue(id){
@@ -216,5 +254,40 @@ function init(){
          setValue('txtX', cubeMesh.geometry.parameters.width);
          setValue('txtY', cubeMesh.geometry.parameters.height);
          setValue('txtZ', cubeMesh.geometry.parameters.depth);
+    }
+}
+
+function cloneObject(){
+    try{
+
+    var cloned = mesh.children[0].geometry.clone();
+    var materials = [
+        new THREE.MeshLambertMaterial({
+            opacity:0.6,
+            color:0x44ff44,
+            transparent:true
+        }),
+        new THREE.MeshBasicMaterial({
+            color:0xffffff,
+            wireframe:true
+        })
+    ];
+
+    var cloneMesh = new THREE.SceneUtils.createMultiMaterialObject(cloned, materials);
+    cloneMesh.translateX(5);
+    cloneMesh.translateZ(3);
+    cloneMesh.name='clone';
+    scene.remove(scene.getObjectByName('clone'));
+    scene.add(cloneMesh);
+    }catch(err){
+        window.alert(err);
+    }
+}
+
+function hideWire (){
+    if($("#hideWire").prop("checked")){
+        mesh.children[1].visible = false;
+    }else{
+        mesh.children[1].visible = true;
     }
 }

@@ -33,7 +33,7 @@
                         <input id="cbz" type="checkbox" value="z"/><span>Z</span>
                     </td>
                     <td>
-                        <button id="translateObject" onclick="translateObject('cube_2');">Translate</button>
+                        <button id="translateObject" onclick="translateObject('multiMesh');">Translate</button>
                     </td>
                 </tr>
                 <tr>
@@ -47,8 +47,21 @@
                         <button id="scaleObject" onclick="scaleObject('cube_3');">Scale</button>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <button id="fogObject" onclick="resizeObject('cube_100');">Fog</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="cloneObject" onclick="cloneObject();">clone</button>
+                    </td>
+                    <td>
+                        <input id="hideWire" type="checkbox" value="true" onclick="hideWire();" />
+                        <span>hide wireframe</span>
+                    </td>
+                </tr>
             </table>
-            <button id="fogObject" onclick="resizeObject('cube_100');">Fog</button>
         </div>
         <!--<script src="../js/section2/section-2.1.js"></script>-->
         <script src="../js/section2/section-2.2.js"></script>
