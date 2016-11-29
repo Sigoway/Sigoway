@@ -20,6 +20,7 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 // camera.position.set(-180, 90, -180);
 camera.position.set(150, 150, 150);
+//camera.position.set(0, -100, -100);
 
 //参数antialias使线条平滑锯齿少
 var renderer = new THREE.WebGLRenderer({antialias:true});
@@ -41,7 +42,6 @@ plane.receiveShadow = true;
 scene.add(plane);
 
 var axes = new THREE.AxisHelper(50);
-// axes.rotateZ(-0.25 * Math.PI)
 scene.add(axes);
 
 var cubeSize = 10;
@@ -49,8 +49,10 @@ var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
 var cubeMaterial = new THREE.MeshDepthMaterial(/*{wireframe:true, transparent:true, opacity:0.1}*/);
 
 function addCube(){
-    var colorMaterial = new THREE.MeshBasicMaterial({
-         color:Math.random() * 0xffffff,
+    var materialColor = Math.random() * 0xffffff;
+    var colorMaterial = new THREE.MeshPhongMaterial({
+         color:materialColor,
+         specular:materialColor,
          transparent:true,
          blending: THREE.MultiplyBlending
      });
@@ -119,6 +121,51 @@ var cubeGeometry = new THREE.CubeGeometry(25,25,25);
 var cube = new THREE.Mesh(cubeGeometry, faceMaterial);
 cube.position.set(0,25,60);
 scene.add(cube);
+
+function getPoints(start, end){
+    var points = [];
+    // for(var i = start; i<end; i++){
+    //     points.push(new THREE.Vector3(i*100, Math.abs(Math.sin(i) * 100), 0))
+    // }
+    points.push(new THREE.Vector3(0, 50, 0));
+    points.push(new THREE.Vector3(50, 50, 0));
+    points.push(new THREE.Vector3(50, 0, 0));
+    points.push(new THREE.Vector3(50, 0, 50));
+    points.push(new THREE.Vector3(50, 50, 50));
+    points.push(new THREE.Vector3(0, 50, 50));
+
+    return points;
+}
+
+var points = getPoints(4, 60);
+var lines = new THREE.Geometry();
+var colors = [];
+var index = 0;
+points.forEach(function(e){
+    lines.vertices.push(new THREE.Vector3(e.x, e.y, e.z));
+    colors[index] = new THREE.Color(0xffffff);
+    colors[index].setHSL(e.x, e.y * 20, 0.8);
+    index++;
+});
+lines.colors = colors;
+
+var lineMaterial = new THREE.LineBasicMaterial({
+    opacity:1.0,
+    linewidth:1,
+    vertexColors:THREE.VertexColors
+});
+
+lines.computeLineDistances();//用来计算线缝隙，如果不执行语句不会显示点线效果
+lineMaterial = new THREE.LineDashedMaterial({
+    vertexColors:true,
+    color:0xffffff,
+    dashSize:10,//线段长度
+    gapSize:1,//线段间隙
+    scale:1//缩放比例，<1: dashSize和gapSize会扩大，反之缩小
+});
+
+var line = new THREE.Line(lines, lineMaterial);
+scene.add(line);
 
 //照射光源
 var directionLight = new THREE.DirectionalLight(0xffffff, 0.7);
