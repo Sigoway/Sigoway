@@ -1,4 +1,4 @@
-///<reference path="typings/threejs/three.d.ts" />
+///<reference path="../typings/threejs/three.d.ts" />
 
 var stats = initStat();
 

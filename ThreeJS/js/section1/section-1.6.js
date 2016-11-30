@@ -1,16 +1,24 @@
-//使用MeshLambertMaterial材质支持光源
+///<reference path="../typings/threejs/three.d.ts" />
 
-function load15(){
+//使用requestAnimationFrame增加动画效果(Stats库统计帧数)
+
+//创建一个统计器
+var stats = initStats();
+
+var scene, renderer, camera;
+
+//function load16(){
     //创建一个场景
-    var scene = new THREE.Scene();
-    //创建一个相机
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    scene = new THREE.Scene();
     //创建一个渲染器
-    var renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer();
+    //创建一个相机
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    
     renderer.setClearColor('#000000', 1.0);
     renderer.setSize(window.innerWidth, window.innerHeight);
     //启用阴影映射
-    renderer.shadowMapEnabled = true;
+    renderer.shadowMap.enabled = true;
     //控制阴影类型
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -81,5 +89,43 @@ function load15(){
     camera.lookAt(scene.position);
 
     $('#WebGL-output').append(renderer.domElement);
+    render();
+//};
+
+var step = 0;
+
+/**
+ * 渲染场景
+ */
+function render(){
+    stats.begin();
+    
+    //旋转立方体
+    cube.rotation.x += 0.02;
+    cube.rotation.y += 0.02;
+    cube.rotation.z += 0.02;
+
+    //球体跳动速度
+    step += 0.04;
+    //球体跳动
+    sphere.position.x = 20 + (10 * Math.cos(step));
+    sphere.position.y = 2 + (10 * Math.abs(Math.sin(step)));
+
+    requestAnimationFrame(render);
     renderer.render(scene, camera);
-};
+
+    stats.end(); 
+}
+
+/**
+ * 创建一个Stats对象
+ */
+function initStats(){
+    var stats = new Stats();
+    stats.setMode(0);// 0: fps, 1: ms, 2: mb, 3+: custom
+    stats.domElement.position = 'absolute';
+    stats.domElement.left = '0px';
+    stats.domElement.top = '0px';
+    $('#Stats-output').append(stats.domElement);
+    return stats;
+}

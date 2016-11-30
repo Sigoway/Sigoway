@@ -1,4 +1,5 @@
-///</// <reference path="../libs/typings/tsd.d.ts" />
+///<reference path="../typings/threejs/three.d.ts" />
+
 //使用dat.gui.js添加UI控制器
 
 //创建一个统计器

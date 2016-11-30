@@ -1,4 +1,4 @@
-///<reference path="typings/threejs/three.d.ts" />
+///<reference path="../typings/threejs/three.d.ts" />
 
 var numberOfObjects = 0;
 var numberOfCubes = 0;
