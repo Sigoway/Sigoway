@@ -45,63 +45,47 @@ var plane = new THREE.SceneUtils.createMultiMaterialObject(planeGeometry, planeM
 plane.rotation.x = -Math.PI/2;
 scene.add(plane);
 
-//立体几何，各面分段
-var cubeGeometry = new THREE.CubeGeometry(20, 20, 20, 10, 10, 10);
-var cubeMaterial = [
-    //计算法向颜色各个面颜色不一样
-    new THREE.MeshNormalMaterial({
-        opacity:0.8,
-        transparent:true,
-    }),
-    new THREE.MeshBasicMaterial({
-        color:0x000000,
-        wireframe:true,
-        shading:THREE.FlatShading
-    })
-];
-var cube = THREE.SceneUtils.createMultiMaterialObject(cubeGeometry, cubeMaterial); 
-scene.add(cube);
-
-function createSphere(geom){
+function createCylinder(geometry){
+    var cylinderGeometry = geometry || new THREE.CylinderGeometry();
     var materials = [
         new THREE.MeshNormalMaterial({side:THREE.DoubleSide}),
         new THREE.MeshBasicMaterial({wireframe:true})
     ];
 
-    return THREE.SceneUtils.createMultiMaterialObject(geom,materials);
+    return THREE.SceneUtils.createMultiMaterialObject(cylinderGeometry,materials);
 }
 
-//球
-var sphere = createSphere(new THREE.SphereGeometry(4,10,10));
-sphere.position.set(-50, 10, -50);
-scene.add(sphere);
+//圆柱体
+var cylinder = createCylinder();
+scene.add(cylinder);
 
 var controls = new function(){
-    this.radius = sphere.children[0].geometry.parameters.radius;
-    this.widthSegments = sphere.children[0].geometry.parameters.widthSegments;
-    this.heightSegments = sphere.children[0].geometry.parameters.heightSegments;
-    this.phiStart = 0;
-    this.phiLength = 2 * Math.PI;
+    this.radiusTop = 20;
+    this.radiusBottom = 20;
+    this.height = 100;
+    this.radiusSegments = 8;
+    this.heightSegments = 1;
+    this.openEnded = true;
     this.thetaStart = 0;
     this.thetaLength = Math.PI;
 
     this.redraw = function(){
-        scene.remove(sphere);
-        sphere = createSphere(new THREE.SphereGeometry(controls.radius, controls.widthSegments,
-            controls.heightSegments, controls.phiStart, controls.phiLength,
-            controls.thetaStart, controls.thetaLength));
-        sphere.position.set(-50, 10, -50);
-        scene.add(sphere);
+        scene.remove(cylinder);
+        cylinder = createCylinder(new THREE.CylinderGeometry(controls.radiusTop, controls.radiusBottom,
+            controls.height, controls.radiusSegments, controls.heightSegments,
+            controls.openEnded, controls.thetaStart, controls.thetaLength));
+        scene.add(cylinder);
     }
 }
 
 var gui = new dat.GUI();
-gui.add(controls, 'radius', 0, 40).onChange(controls.redraw);
-gui.add(controls, 'widthSegments', 0, 20).onChange(controls.redraw);
-gui.add(controls, 'heightSegments', 0, 20).onChange(controls.redraw);
-gui.add(controls, 'phiStart', 0, 2*Math.PI).onChange(controls.redraw);
-gui.add(controls, 'phiLength', 0, 2*Math.PI).onChange(controls.redraw);
-gui.add(controls, 'thetaStart', 0, 2*Math.PI).onChange(controls.redraw);
+gui.add(controls, 'radiusTop', -100, 100).onChange(controls.redraw);
+gui.add(controls, 'radiusBottom', -100, 100).onChange(controls.redraw);
+gui.add(controls, 'height', 0, 500).onChange(controls.redraw);
+gui.add(controls, 'radiusSegments', 0, 50).onChange(controls.redraw);
+gui.add(controls, 'heightSegments', 0, 50).onChange(controls.redraw);
+gui.add(controls, 'openEnded', 0, 1).onChange(controls.redraw);
+gui.add(controls, 'thetaStart', 0, 2 * Math.PI).onChange(controls.redraw);
 gui.add(controls, 'thetaLength', 0, 2*Math.PI).onChange(controls.redraw);
 
 var step = 0;
@@ -113,11 +97,9 @@ render();
 function render(){
     stats.begin();
 
-    sphere.rotation.y = step += 0.01;
-    
-    cube.rotation.x = step;
-    cube.rotation.y = step;
-    cube.rotation.z = step;
+    cylinder.rotation.y = step += 0.01;
+    cylinder.rotation.x = step;
+    cylinder.rotation.z = step;
 
     requestAnimationFrame(render);
     renderer.render(scene, camera);
